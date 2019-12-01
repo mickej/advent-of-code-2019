@@ -7,18 +7,32 @@ import (
 	"strconv"
 )
 
+func calcFuel(mass int) int {
+	return (mass / 3) - 2
+}
+
+func calcModule(mass int) int {
+	if mass <= 0 {
+		return 0
+	}
+
+	return mass + calcModule(calcFuel(mass))
+}
+
 func main() {
 	file, _ := os.Open("input")
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 
-	var total = 0
+	var totalPart1 = 0
+	var totalPart2 = 0
 	for scanner.Scan() {
-		mass, _ := strconv.ParseFloat(scanner.Text(), 64)
-		fuel := (int(mass) / 3) - 2
-		total += fuel
+		i, _ := strconv.Atoi(scanner.Text())
+		totalPart1 += calcFuel(i)
+		totalPart2 += calcModule(calcFuel(i))
 	}
 
-	fmt.Printf(strconv.FormatInt(int64(total), 10))
+	fmt.Printf("Part1: %d\n", totalPart1)
+	fmt.Printf("Part2: %d\n", totalPart2)
 }
