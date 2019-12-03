@@ -45,24 +45,43 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	if scanner.Scan() {
 		line := scanner.Text()
-		split := toIntArray(strings.Split(line, ","))
-		split[1] = 12
-		split[2] = 2
 
-		part1(split)
+		fmt.Println(part1(toIntArray(strings.Split(line, ",")), 12, 2)[0])
+		fmt.Println(part2(toIntArray(strings.Split(line, ","))))
 	} else {
 		panic("oh no")
 	}
 }
 
-func part1(codes []int) {
+func part1(codes []int, noun, verb int) []int {
+	codes[1] = noun
+	codes[2] = verb
+
 	for _, batch := range batches(codes) {
 		opcode := batch[0]
 		if opcode == 99 {
-			fmt.Println("DONE", codes[0])
 			break
 		} else {
 			codes[batch[3]] = handleOpcode(opcode, codes[batch[1]], codes[batch[2]])
 		}
 	}
+
+	return codes
+}
+
+func part2(oc []int) int {
+	for noun := 0; noun <= 99; noun++ {
+		for verb := 0; verb <= 99; verb++ {
+			codes := make([]int, len(oc))
+			copy(codes, oc)
+
+			codes = part1(codes, noun, verb)
+
+			if codes[0] == 19690720 {
+				return 100 * noun + verb
+			}
+		}
+	}
+
+	panic("Should have found something")
 }
