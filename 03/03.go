@@ -106,6 +106,43 @@ func part1(row1, row2 []directiondistance) int {
 	return min_distance
 }
 
+func part2(row1, row2 []directiondistance) int {
+	line1 := line(row1)
+	line2 := line(row2)
+
+	dups := duplicates(line1, line2)
+	distances := make([]int, 0)
+	for _, d := range dups {
+		points := make([]point, 0)
+		for _, v := range line1 {
+			if d.x == v.x && d.y == v.y {
+				points = append(points, v)
+			}
+		}
+
+		for _, v := range line2 {
+			if d.x == v.x && d.y == v.y {
+				points = append(points, v)
+			}
+		}
+
+		steps := 0
+		for _, v := range points {
+			steps += v.steps
+		}
+		distances = append(distances, steps)
+	}
+
+	min := math.MaxInt32
+	for _, v := range distances {
+		if v < min {
+			min = v
+		}
+	}
+
+	return min
+}
+
 func main() {
 	file, _ := os.Open("input")
 	defer file.Close()
@@ -117,4 +154,5 @@ func main() {
 	scanner.Scan()
 	row2, _ := toDirectiondistance(scanner.Text())
 	fmt.Println(part1(row1, row2))
+	fmt.Println(part2(row1, row2))
 }
