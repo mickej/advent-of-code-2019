@@ -51,6 +51,31 @@ func part1(m map[string]space_object) int {
 	return cnt
 }
 
+func part2(m map[string]space_object) int {
+	san := m["SAN"]
+	santocom := make(map[string]space_object)
+	for san.orbits != "" {
+		santocom[san.orbits] = san
+		san = m[san.orbits]
+	}
+
+	transfers := 0
+	firstCommon := m["YOU"]
+	for _, present := santocom[firstCommon.orbits]; !present;  _, present = santocom[firstCommon.orbits] {
+		transfers++
+		firstCommon = m[firstCommon.orbits]
+	}
+
+	san = m[m["SAN"].orbits]
+	for san.name != firstCommon.orbits {
+		transfers++
+		san = m[san.orbits]
+	}
+
+	return transfers
+
+}
+
 func main() {
 	file, _ := os.Open("input")
 	defer file.Close()
@@ -62,5 +87,7 @@ func main() {
 		array = append(array, line)
 	}
 
-	fmt.Println(part1(build_orbits(array)))
+	orbits := build_orbits(array)
+	fmt.Println(part1(orbits))
+	fmt.Println(part2(orbits))
 }
