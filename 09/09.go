@@ -26,10 +26,9 @@ func main() {
 	if scanner.Scan() {
 		line := scanner.Text()
 
-		fmt.Println(part1(toIntArray(strings.Split(line, ",")), 1))
+		fmt.Println("part1", part1(toIntArray(strings.Split(line, ",")), 1))
+		fmt.Println("part2", part1(toIntArray(strings.Split(line, ",")), 2))
 
-		//fmt.Println(part1(toIntArray(strings.Split(line, ",")), 5))
-		//fmt.Println(part2(toIntArray(strings.Split(line, ","))))
 	} else {
 		panic("oh no")
 	}
@@ -48,13 +47,11 @@ func read(codes []int, mode, val, relativeBase int) int {
 func write(codes []int, idx, val int) []int {
 	ret := codes
 	if idx >= len(codes) {
-		fmt.Println("make larger", idx)
 		ret = make([]int, idx + 1)
 		copy(ret, codes)
 	}
 
 	ret[idx] = val
-	fmt.Println("wrote", idx, val)
 
 	return ret
 }
@@ -81,7 +78,6 @@ func part1(codes []int, input int) []int {
 		mode3 := (abcde % 100000) / 10000
 
 		if opcode == 99 {
-			fmt.Println("99")
 			break
 		} else if opcode == 1 {
 			val1 := read(codes, mode1, codes[i + 1], relativeBase)
@@ -141,8 +137,6 @@ func part1(codes []int, input int) []int {
 		} else if opcode == 9 {
 			relativeBase += read(codes, mode1, codes[i + 1], relativeBase)
 			i += 2
-		} else {
-			fmt.Println("i don't know that")
 		}
 	}
 
