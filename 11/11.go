@@ -33,8 +33,53 @@ func main() {
 	if scanner.Scan() {
 		line := scanner.Text()
 
-		painted := outputs(toIntArray(strings.Split(line, ",")), 0)
-		fmt.Println("outputs", len(painted))
+		painted := outputs(toIntArray(strings.Split(line, ",")), 1)
+		fmt.Println("part1", len(painted))
+
+		largestX := 0
+		smallestX := 0
+		largestY := 0
+		smallestY := 0
+		for k, _ := range painted {
+			split := strings.Split(k, ",")
+			x, _ := strconv.Atoi(split[0])
+			y, _ := strconv.Atoi(split[1])
+			if x > largestX {
+				largestX = x
+			}
+
+			if x < smallestX {
+				smallestX = x
+			}
+
+			if y > largestY {
+				largestY = y
+			}
+
+			if y < smallestY {
+				smallestY = y
+			}
+		}
+
+		for j := smallestY; j <= largestY; j++ {
+			for i := smallestX; i <= largestX; i++ {
+				k := strconv.Itoa(i) + "," + strconv.Itoa(j)
+				color, present := painted[k]
+				if !present {
+					color = 0
+				}
+
+				if color == 0 {
+					fmt.Print(" ")
+				} else if color == 1 {
+					fmt.Print("█")
+				} else {
+					panic("crap...")
+				}
+			}
+
+			fmt.Println()
+		}
 	} else {
 		panic("oh no")
 	}
@@ -136,7 +181,7 @@ func getIdx(codes []int, mode, idx, relativeBase int) int {
 
 func outputs(codes []int, input int) map[string]int {
 	painted := make(map[string]int)
-	currentPosition := position{0, 0, "^", 0}
+	currentPosition := position{0, 0, "^", input}
 
 	output := make([]int, 0)
 	relativeBase := 0
